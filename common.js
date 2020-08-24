@@ -1,6 +1,6 @@
 var point = function(x, y) {
     return {x: x, y: y};
-}
+};
 
 var comparePoints = function(a, b) {
     if (a.x < b.x) {
@@ -13,13 +13,13 @@ var comparePoints = function(a, b) {
         return 1;
     }
     return 0;
-}
+};
 
 var line = function(point1, point2) {
     points = [point1, point2];
     points.sort(comparePoints);
     return {point1: points[0], point2: points[1]};
-}
+};
 
 var drawLine = function(line) {
     var svgEm = document.getElementById("maze");
@@ -34,7 +34,7 @@ var drawLine = function(line) {
     lineElement.setAttribute("stroke-linecap", "square");
 
     svgEm.appendChild(lineElement);
-}
+};
 
 var drawCell = function(position, cellWalls) {
     var svgEm = document.getElementById("maze");
@@ -75,22 +75,3 @@ var drawCell = function(position, cellWalls) {
         drawLine(line(tr, br));
     }
 };
-
-
-setTimeout(function() {
-    document.getElementById("btn1").addEventListener("click", function() {
-        var pos = {
-            x: Number(document.getElementById('pos_x').value),
-            y: Number(document.getElementById('pos_y').value)
-        };
-        var cellWalls = {
-            top: Number(document.getElementById('top').value),
-            bottom: Number(document.getElementById('bottom').value),
-            left: Number(document.getElementById('left').value),
-            right: Number(document.getElementById('right').value)
-        };
-
-        drawCell(pos, cellWalls);
-        return false;
-    });
-}, 1000);
