@@ -1,3 +1,10 @@
+/******************************************
+ * Some stuff for drawing mazes.
+ *
+ * Copyright (C) 2020 Mark Goodwin
+ * See license.txt
+ ******************************************/
+
 var drawMaze = function() {
     rows = 100;
     columns = 200;

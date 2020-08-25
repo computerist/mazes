@@ -1,3 +1,43 @@
+/******************************************
+ * Some stuff for drawing mazes.
+ *
+ * Copyright (C) 2020 Mark Goodwin
+ * See license.txt
+ ******************************************/
+
+function Cell(position, top, bottom, left, right) {
+    this.position = position;
+    this.top = top;
+    this.bottom = bottom;
+    this.left = left;
+    this.right = right;
+}
+
+Cell.prototype.placeLeftOf = function (otherCell) {
+    otherCell.cellLeft = this;
+    this.cellRight = otherCell;
+};
+
+Cell.prototype.placeRightOf = function (otherCell) {
+    otherCell.cellRight = this;
+    this.cellLeft = otherCell;
+};
+
+Cell.prototype.placeAbove = function (otherCell) {
+    otherCell.cellAbove = this;
+    this.cellBelow = otherCell;
+};
+
+Cell.prototype.placeBelow = function (otherCell) {
+    otherCell.cellBelow = this;
+    this.cellAbove = otherCell;
+};
+
+function Position(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
 var point = function(x, y) {
     return {x: x, y: y};
 };
