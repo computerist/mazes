@@ -55,12 +55,6 @@ Cell.prototype.toString = function() {
     return `(${pos.x}, ${pos.y})`;
 };
 
-function makeSampleable(array) {
-    /*array.sample = function () {
-        return this[Math.floor(Math.random() * this.length)];
-    };*/
-}
-
 function Grid(rows, columns) {
     this.rows = rows;
     this.columns = columns;
@@ -71,11 +65,9 @@ function Grid(rows, columns) {
 
 Grid.prototype.prepareGrid = function() {
     let gridRows = [];
-    makeSampleable(gridRows);
     gridRows.length = this.rows;
     for (let row = 0; row < gridRows.length; row++) {
         let rowCells = [];
-        makeSampleable(rowCells);
         rowCells.length = this.columns;
         for (let column = 0; column < rowCells.length; column++) {
             rowCells[column] = new Cell(new Position(row, column));
