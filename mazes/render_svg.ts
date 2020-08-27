@@ -58,8 +58,13 @@ class TranslationParameters {
         this.scale = scale;
     }
 
-    translateTo(point: Point): Point {
+    translateFrom(point: Point): Point {
         let p = new Point((point.x / this.scale.x) - this.origin.x, (point.y / this.scale.y) - this.origin.y);
+        return p;
+    }
+
+    translateTo(point: Point): Point {
+        let p = new Point((point.x + this.origin.x ) * this.scale.x, (point.y + this.origin.y) * this.scale.y);
         return p;
     }
 }
@@ -83,13 +88,13 @@ class Orientation {
         translationParameters.scale.y =
             (this.topLeft.y - this.bottomLeft.y) /
             (orientation.topLeft.y - orientation.bottomLeft.y);
+
         translationParameters.scale.x =
             (this.topRight.x - this.topLeft.x) /
             (orientation.topRight.x - orientation.topLeft.x);
 
         translationParameters.origin.x = (this.topRight.x / translationParameters.scale.x) - orientation.topRight.x;
         translationParameters.origin.y = (this.topRight.y / translationParameters.scale.y) - orientation.topRight.y;
-        
         return translationParameters;
     }
 }

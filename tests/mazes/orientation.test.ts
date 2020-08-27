@@ -27,20 +27,24 @@ describe('Orientation', function () {
 
         it('should calculate the correct offsets', function () {
             let svgTopLeft: Point = new Point(0, 0);
-            let mazeTopLeft: Point = tp.translateTo(svgTopLeft);
-            assert.deepEqual(mazeTopLeft, new Point(0,10));
+            let mazeTopLeft: Point = tp.translateFrom(svgTopLeft);
+            assert.deepEqual(new Point(0,10), mazeTopLeft);
+            assert.deepEqual(tp.translateTo(mazeTopLeft), svgTopLeft);
 
             let svgTopRight: Point = new Point(100, 0);
-            let mazeTopRight: Point = tp.translateTo(svgTopRight);
-            assert.deepEqual(mazeTopRight, new Point(10,10));
+            let mazeTopRight: Point = tp.translateFrom(svgTopRight);
+            assert.deepEqual(new Point(10,10), mazeTopRight);
+            assert.deepEqual(tp.translateTo(mazeTopRight), svgTopRight);
 
             let svgBottomLeft: Point = new Point(0, 200);
-            let mazeBottomLeft: Point = tp.translateTo(svgBottomLeft);
-            assert.deepEqual(mazeBottomLeft, new Point(0,0));
+            let mazeBottomLeft: Point = tp.translateFrom(svgBottomLeft);
+            assert.deepEqual(new Point(0,0), mazeBottomLeft);
+            assert.deepEqual(tp.translateTo(mazeBottomLeft), svgBottomLeft);
 
             let svgBottomRight: Point = new Point(100, 200);
-            let mazeBottomRight: Point = tp.translateTo(svgBottomRight);
-            assert.deepEqual(mazeBottomRight, new Point(10,0));
+            let mazeBottomRight: Point = tp.translateFrom(svgBottomRight);
+            assert.deepEqual(new Point(10,0), mazeBottomRight);
+            assert.deepEqual(tp.translateTo(mazeBottomRight), svgBottomRight);
         });
     });
 });
