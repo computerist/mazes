@@ -10,9 +10,9 @@ Array.prototype.sample = function () {
     return this[Math.floor(Math.random() * this.length)];
 };
 
-function Position(x, y) {
-    this.x = x;
-    this.y = y;
+function Position(column, row) {
+    this.column = column;
+    this.row = row;
 }
 
 function Cell(position) {
@@ -52,7 +52,7 @@ Cell.prototype.isLinked = function(cell) {
 
 Cell.prototype.toString = function() {
     let pos = this.position;
-    return `(${pos.x}, ${pos.y})`;
+    return `(${pos.column}, ${pos.row})`;
 };
 
 function Grid(rows, columns) {
@@ -92,21 +92,21 @@ Grid.prototype.eachRow = function*() {
 };
 
 Grid.prototype.cellAt = function(position) {
-    let {x, y} = position;
-    if (this.grid.hasOwnProperty(y)) {
-        let row = this.grid[y];
-        return row.hasOwnProperty(x) ? this.grid[y][x] : null;
+    let {column, y: row} = position;
+    if (this.grid.hasOwnProperty(row)) {
+        let gridRow = this.grid[row];
+        return gridRow.hasOwnProperty(column) ? this.grid[row][column] : null;
     }
     return null;
 }
 
 Grid.prototype.configureCells = function() {
     for(let cell of this.eachCell()) {
-        let {x, y} = cell.position;
-        cell.north = this.cellAt(new Position(x, y + 1));
-        cell.south = this.cellAt(new Position(x, y - 1));
-        cell.east = this.cellAt(new Position(x + 1, y));
-        cell.west = this.cellAt(new Position(x - 1, y));
+        let {column, y: row} = cell.position;
+        cell.north = this.cellAt(new Position(column, row + 1));
+        cell.south = this.cellAt(new Position(column, row - 1));
+        cell.east = this.cellAt(new Position(column + 1, row));
+        cell.west = this.cellAt(new Position(column - 1, row));
     }
 };
 
