@@ -5,7 +5,8 @@
  * See license.txt
  *****************************************************************************/
 
-import {Cell, Grid, GridPosition} from './mazes';
+import {Cell, Grid} from './mazes';
+import {SVGRenderer} from './render_svg';
 
 let makeBinaryTree = function(grid: Grid) {
     for(let cell of grid.eachCell()) {
@@ -25,6 +26,9 @@ let makeBinaryTree = function(grid: Grid) {
     return grid;
 }
 
-
+let svg = document.getElementById("maze") as unknown as SVGElement;
 let grid = new Grid(10, 10);
 makeBinaryTree(grid);
+
+let renderer = new SVGRenderer(svg, grid);
+renderer.renderGrid(null);

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+/******************************************
+ * Some stuff for drawing mazes.
+ * 
+ * Copyright (C) 2020 Mark Goodwin
+ * See license.txt
+ ******************************************/
+-->
+<html>
+    <head>
+        <title>An SVG Binary Tree maze</title>
+    </head>
+    <body>
+        <svg viewBox="0 0 200 100" id="maze" xmlns="http://www.w3.org/2000/svg">
+        </svg>
+    </body>
+    <script src="bundle.js"></script>
+    <script>
+        renderGrid(10, 10, document.getElementById("maze"));
+    </script>
+</html>

@@ -16,6 +16,13 @@ class GridPosition {
     }
 }
 
+interface CellWalls {
+    top:    boolean;
+    bottom: boolean;
+    left:   boolean;
+    right:  boolean;
+};
+
 class Cell {
     position: GridPosition;
     links: Array<Cell>;
@@ -62,7 +69,17 @@ class Cell {
     }
 
     isLinked(cell: Cell) {
+        if (!cell) return false;
         return this.links.indexOf(cell) >= 0;
+    }
+
+    getCellWalls(): CellWalls {
+        return {
+            top:    this.position.row == 0      ? true  : false,
+            bottom: this.isLinked(this.south)   ? false : true,
+            left:   this.position.column == 0   ? true  : false,
+            right:  this.isLinked(this.east)    ? false : true
+        };
     }
 
     toString = function() {
