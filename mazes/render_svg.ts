@@ -124,6 +124,8 @@ class SVGContext {
     constructor(svgElement: SVGElement, translation?: TranslationParameters) {
         if (! translation) {
             this.translationParameters = NO_TRANSLATION;
+        } else {
+            this.translationParameters = translation;
         }
         this.svgElement = svgElement;
     }
@@ -156,8 +158,9 @@ class Line {
         // sort the points so each line segment has a canonical form
         let points: Point[] = [point1, point2];
         points.sort(comparePoints);
-        point1 = points[0];
-        point2 = points[1];
+        this.point1 = points[0];
+        this.point2 = points[1];
+        this.elements = [];
     }
 
     /**
@@ -233,6 +236,7 @@ class SVGRenderer {
     }
 
     *renderGrid(pauseAfter?: PauseAfter): any {
+        console.log("Pause after? " + pauseAfter);
         for(let cell of this.grid.eachCell()) {
             let walls = cell.getCellWalls();
             let pos = cell.position;
@@ -242,7 +246,7 @@ class SVGRenderer {
             let right = (pos.column + 1) * 3;
 
             if(walls.top) {
-                let topLine = new Line(new Point(top, left), new Point(top, right));
+                let topLine = new Line(new Point(left, top), new Point(right, top));
                 topLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
@@ -250,7 +254,7 @@ class SVGRenderer {
             }
 
             if(walls.bottom) {
-                let bottomLine = new Line(new Point(bottom, left), new Point(bottom, right));
+                let bottomLine = new Line(new Point(left, bottom), new Point(right, bottom));
                 bottomLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
@@ -258,7 +262,7 @@ class SVGRenderer {
             }
 
             if(walls.left) {
-                let leftLine = new Line(new Point(top, left), new Point(bottom, left));
+                let leftLine = new Line(new Point(left, top), new Point(left, bottom));
                 leftLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
@@ -266,7 +270,7 @@ class SVGRenderer {
             }
 
             if(walls.right) {
-                let rightLine = new Line(new Point(top, right), new Point(bottom, right));
+                let rightLine = new Line(new Point(right, top), new Point(right, bottom));
                 rightLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
@@ -282,4 +286,4 @@ class SVGRenderer {
 
 const NO_TRANSLATION: TranslationParameters = new TranslationParameters({x:1, y:1}, new Point(0, 0));
 
-export {Point, Line, Orientation, TranslationParameters, SVGRenderer};
+export {Point, Line, Orientation, TranslationParameters, SVGRenderer, PauseAfter};

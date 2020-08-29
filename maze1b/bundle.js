@@ -1,7 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.renderGrid = void 0;
 const mazes_1 = require("./mazes");
 const render_svg_1 = require("./render_svg");
 let makeBinaryTree = function (grid) {
@@ -20,13 +19,12 @@ let makeBinaryTree = function (grid) {
     }
     return grid;
 };
-function renderGrid(rows, columns, svg) {
-    let grid = new mazes_1.Grid(rows, columns);
-    makeBinaryTree(grid);
-    let renderer = new render_svg_1.SVGRenderer(svg, grid);
-    renderer.renderGrid(null);
+let svg = document.getElementById("maze");
+let grid = new mazes_1.Grid(100, 200);
+makeBinaryTree(grid);
+let renderer = new render_svg_1.SVGRenderer(svg, grid);
+for (let thing of renderer.renderGrid(null)) {
 }
-exports.renderGrid = renderGrid;
 
 },{"./mazes":2,"./render_svg":3}],2:[function(require,module,exports){
 "use strict";
@@ -83,12 +81,13 @@ class Cell {
         return this.links.indexOf(cell) >= 0;
     }
     getCellWalls() {
-        return {
+        let walls = {
             top: this.position.row == 0 ? true : false,
             bottom: this.isLinked(this.south) ? false : true,
             left: this.position.column == 0 ? true : false,
             right: this.isLinked(this.east) ? false : true
         };
+        return walls;
     }
 }
 exports.Cell = Cell;
@@ -115,6 +114,7 @@ class Grid {
     *eachCell() {
         for (let row of this.grid) {
             for (let cell of row) {
+                console.log(`column: ${cell.position.column} row: ${cell.position.row}`);
                 yield cell;
             }
         }
@@ -135,10 +135,10 @@ class Grid {
     configureCells() {
         for (let cell of this.eachCell()) {
             let { column, row } = cell.position;
-            cell.north = this.cellAt(new GridPosition(column, row + 1));
-            cell.south = this.cellAt(new GridPosition(column, row - 1));
-            cell.east = this.cellAt(new GridPosition(column + 1, row));
-            cell.west = this.cellAt(new GridPosition(column - 1, row));
+            cell.north = this.cellAt(new GridPosition(row - 1, column));
+            cell.south = this.cellAt(new GridPosition(row + 1, column));
+            cell.east = this.cellAt(new GridPosition(row, column + 1));
+            cell.west = this.cellAt(new GridPosition(row, column - 1));
         }
     }
     size() {
@@ -154,12 +154,13 @@ exports.Grid = Grid;
 },{}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SVGRenderer = exports.TranslationParameters = exports.Orientation = exports.Line = exports.Point = void 0;
+exports.PauseAfter = exports.SVGRenderer = exports.TranslationParameters = exports.Orientation = exports.Line = exports.Point = void 0;
 var PauseAfter;
 (function (PauseAfter) {
     PauseAfter[PauseAfter["line"] = 1] = "line";
     PauseAfter[PauseAfter["cell"] = 2] = "cell";
 })(PauseAfter || (PauseAfter = {}));
+exports.PauseAfter = PauseAfter;
 class Point {
     constructor(x, y) {
         this.x = x;
@@ -236,6 +237,9 @@ class SVGContext {
         if (!translation) {
             this.translationParameters = NO_TRANSLATION;
         }
+        else {
+            this.translationParameters = translation;
+        }
         this.svgElement = svgElement;
     }
     toSVGPoint(point) {
@@ -246,8 +250,9 @@ class Line {
     constructor(point1, point2) {
         let points = [point1, point2];
         points.sort(comparePoints);
-        point1 = points[0];
-        point2 = points[1];
+        this.point1 = points[0];
+        this.point2 = points[1];
+        this.elements = [];
     }
     renderOn(ctx) {
         let svgEm = ctx.svgElement;
@@ -284,6 +289,7 @@ class SVGRenderer {
         this.grid = grid;
     }
     *renderGrid(pauseAfter) {
+        console.log("Pause after? " + pauseAfter);
         for (let cell of this.grid.eachCell()) {
             let walls = cell.getCellWalls();
             let pos = cell.position;
@@ -292,28 +298,28 @@ class SVGRenderer {
             let left = pos.column * 3;
             let right = (pos.column + 1) * 3;
             if (walls.top) {
-                let topLine = new Line(new Point(top, left), new Point(top, right));
+                let topLine = new Line(new Point(left, top), new Point(right, top));
                 topLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
                 }
             }
             if (walls.bottom) {
-                let bottomLine = new Line(new Point(bottom, left), new Point(bottom, right));
+                let bottomLine = new Line(new Point(left, bottom), new Point(right, bottom));
                 bottomLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
                 }
             }
             if (walls.left) {
-                let leftLine = new Line(new Point(top, left), new Point(bottom, left));
+                let leftLine = new Line(new Point(left, top), new Point(left, bottom));
                 leftLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;
                 }
             }
             if (walls.right) {
-                let rightLine = new Line(new Point(top, right), new Point(bottom, right));
+                let rightLine = new Line(new Point(right, top), new Point(right, bottom));
                 rightLine.renderOn(this.svg);
                 if (pauseAfter && pauseAfter == PauseAfter.line) {
                     yield;

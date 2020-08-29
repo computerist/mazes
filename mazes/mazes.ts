@@ -74,12 +74,13 @@ class Cell {
     }
 
     getCellWalls(): CellWalls {
-        return {
+        let walls = {
             top:    this.position.row == 0      ? true  : false,
             bottom: this.isLinked(this.south)   ? false : true,
             left:   this.position.column == 0   ? true  : false,
             right:  this.isLinked(this.east)    ? false : true
         };
+        return walls;
     }
 
     toString = function() {
@@ -119,6 +120,7 @@ class Grid {
     *eachCell(): Generator<Cell> {
         for (let row of this.grid) {
             for (let cell of row) {
+                console.log(`column: ${cell.position.column} row: ${cell.position.row}`);
                 yield cell;
             }
         }
@@ -142,10 +144,10 @@ class Grid {
     configureCells() {
         for(let cell of this.eachCell()) {
             let {column, row} = cell.position;
-            cell.north = this.cellAt(new GridPosition(column, row + 1));
-            cell.south = this.cellAt(new GridPosition(column, row - 1));
-            cell.east = this.cellAt(new GridPosition(column + 1, row));
-            cell.west = this.cellAt(new GridPosition(column - 1, row));
+            cell.north = this.cellAt(new GridPosition(row - 1, column));
+            cell.south = this.cellAt(new GridPosition(row + 1, column));
+            cell.east = this.cellAt(new GridPosition(row, column + 1));
+            cell.west = this.cellAt(new GridPosition(row, column - 1));
         }
     }
 

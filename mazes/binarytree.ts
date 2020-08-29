@@ -6,7 +6,7 @@
  *****************************************************************************/
 
 import {Cell, Grid} from './mazes';
-import {SVGRenderer} from './render_svg';
+import {SVGRenderer, PauseAfter} from './render_svg';
 
 let makeBinaryTree = function(grid: Grid) {
     for(let cell of grid.eachCell()) {
@@ -26,9 +26,14 @@ let makeBinaryTree = function(grid: Grid) {
     return grid;
 }
 
-let svg = document.getElementById("maze") as unknown as SVGElement;
-let grid = new Grid(10, 10);
-makeBinaryTree(grid);
+// function hookElement() {
+    let svg = document.getElementById("maze") as unknown as SVGElement;
+    let grid = new Grid(100, 200);
+    makeBinaryTree(grid);
 
-let renderer = new SVGRenderer(svg, grid);
-renderer.renderGrid(null);
+    let renderer = new SVGRenderer(svg, grid);
+    for(let thing of renderer.renderGrid(null)) {
+    }
+//}
+
+// export {hookElement};
