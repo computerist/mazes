@@ -23,8 +23,16 @@ let svg = document.getElementById("maze");
 let grid = new mazes_1.Grid(100, 200);
 makeBinaryTree(grid);
 let renderer = new render_svg_1.SVGRenderer(svg, grid);
-for (let thing of renderer.renderGrid(null)) {
-}
+const gen = renderer.renderGrid(null);
+const start = setInterval(() => {
+    var next = gen.next();
+    if (next.done) {
+        clearInterval(start);
+    }
+    else {
+        console.log(next.value);
+    }
+}, 5);
 
 },{"./mazes":2,"./render_svg":3}],2:[function(require,module,exports){
 "use strict";

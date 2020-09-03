@@ -26,14 +26,18 @@ let makeBinaryTree = function(grid: Grid) {
     return grid;
 }
 
-// function hookElement() {
-    let svg = document.getElementById("maze") as unknown as SVGElement;
-    let grid = new Grid(100, 200);
-    makeBinaryTree(grid);
+let svg = document.getElementById("maze") as unknown as SVGElement;
+let grid = new Grid(100, 200);
+makeBinaryTree(grid);
 
-    let renderer = new SVGRenderer(svg, grid);
-    for(let thing of renderer.renderGrid(null)) {
+let renderer = new SVGRenderer(svg, grid);
+const gen = renderer.renderGrid(null);
+
+const start = setInterval(() => {
+    var next = gen.next();
+    if(next.done){
+        clearInterval(start);
+    } else {
+        console.log(next.value);
     }
-//}
-
-// export {hookElement};
+}, 5);
