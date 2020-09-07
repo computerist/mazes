@@ -120,7 +120,7 @@ class Grid {
     *eachCell(): Generator<Cell> {
         for (let row of this.grid) {
             for (let cell of row) {
-                console.log(`column: ${cell.position.column} row: ${cell.position.row}`);
+                //console.log(`column: ${cell.position.column} row: ${cell.position.row}`);
                 yield cell;
             }
         }
