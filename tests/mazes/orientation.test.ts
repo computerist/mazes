@@ -1,4 +1,4 @@
-import {Orientation, Point, TranslationParameters} from '../../mazes/render_svg';
+import {Orientation, Point, TranslationParameters} from '../../typescript/render_svg';
 
 var assert = require('assert');
 
