@@ -311,37 +311,27 @@ const NO_TRANSLATION = new TranslationParameters({ x: 1, y: 1 }, new Point(0, 0)
 Object.defineProperty(exports, "__esModule", { value: true });
 const mazes_1 = require("./mazes");
 const render_svg_1 = require("./render_svg");
-var WindingDirection;
-(function (WindingDirection) {
-    WindingDirection[WindingDirection["horizontal"] = 1] = "horizontal";
-    WindingDirection[WindingDirection["vertical"] = 2] = "vertical";
-})(WindingDirection || (WindingDirection = {}));
-let chooseDirection = function () {
-    let choice = Math.floor(Math.random() * 2);
-    if (choice == 0) {
-        return WindingDirection.horizontal;
-    }
-    return WindingDirection.vertical;
-};
 let sidewind = function (grid) {
     for (let row of grid.eachRow()) {
         let run = [];
         for (let cell of row) {
             run.push(cell);
-            var direction = chooseDirection();
-            if (!cell.east) {
-                direction = WindingDirection.vertical;
+            let links = [];
+            if (cell.east) {
+                links.push(cell.east);
             }
-            if (!cell.north) {
-                direction = WindingDirection.horizontal;
+            if (cell.north) {
+                links.push(run[Math.floor(Math.random() * run.length)].north);
             }
-            var linkCell = cell.east;
-            if (WindingDirection.vertical == direction) {
-                linkCell = run[Math.floor(Math.random() * run.length)].north;
-                run = [];
-            }
-            if (linkCell) {
-                cell.link(linkCell);
+            let linkedCell = links[Math.floor(Math.random() * links.length)];
+            if (null != linkedCell) {
+                if (linkedCell == cell.east) {
+                    cell.link(linkedCell);
+                }
+                else {
+                    linkedCell.link(linkedCell.south);
+                    run = [];
+                }
             }
         }
     }
